@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5174:5173"
+    environment:
+      - VITE_API_URL=http://server:8000
+    depends_on:
+      - server
+    networks:
+      - ticketing-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    expose:
+      - "8000"
+    volumes:
+      - ./server/data:/app/data
+    networks:
+      - ticketing-network
+
+networks:
+  ticketing-network:
+    driver: bridge
+
